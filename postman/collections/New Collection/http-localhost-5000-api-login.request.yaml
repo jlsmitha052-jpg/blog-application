@@ -1,0 +1,15 @@
+$kind: http-request
+name: http://localhost:5000/api/login
+description: ""
+url: http://localhost:5000/api/login
+method: GET
+body:
+  type: text
+  content: "{\r
+
+    \  \"email\": \"test@example.com\",\r
+
+    \  \"password\": \"TestPass123!\"\r
+
+    }\r\n"
+order: 1000

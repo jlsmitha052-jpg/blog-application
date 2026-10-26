@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InkWell — Home</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header class="topbar">
+        <a class="brand" href="index.html">Ink<span>Well</span></a>
+
+        <nav>
+            <a class="active" href="index.html">Home</a>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a class="nav-button" href="create-blog.html">Write a blog +</a>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <section class="hero">
+            <p class="eyebrow">IDEAS WORTH SHARING</p>
+            <h1>Stories for curious minds.</h1>
+            <p class="muted">
+                Discover fresh perspectives, useful ideas, and stories from our community.
+            </p>
+            <a class="button" href="create-blog.html">Start writing</a>
+        </section>
+
+        <section class="section-head">
+            <div>
+                <p class="eyebrow">THE LATEST</p>
+                <h2>Explore the blog</h2>
+            </div>
+
+            <input
+                id="searchInput"
+                class="search"
+                type="search"
+                placeholder="Search posts..."
+                aria-label="Search blog posts"
+            >
+        </section>
+
+        <p id="loadingMessage" class="muted">Loading blogs...</p>
+
+        <div id="postList" class="post-grid"></div>
+
+        <p id="emptyMessage" class="empty hidden">
+            No posts found. Try another search or write the first post.
+        </p>
+
+    </main>
+
+    <footer>Made for ideas that matter · InkWell</footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

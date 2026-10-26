@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | My Blog</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f5fa;
+      color: #252b48;
+    }
+
+    header {
+      background: #252b48;
+      color: white;
+      padding: 18px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    header h1 { margin: 0; }
+
+    nav {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .login-box {
+      max-width: 380px;
+      margin: 55px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px #00000012;
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
+      font-weight: bold;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 12px;
+      background: #4255d4;
+      color: white;
+      border: 0;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: 0.6; }
+
+    #message {
+      overflow-wrap: anywhere;
+      text-align: center;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>My Blog</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="create-blog.html">Create Blog</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main class="login-box">
+    <h2>Login to Your Account</h2>
+
+    <form id="loginForm">
+      <label for="email">Email Address</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Enter your email"
+        autocomplete="email"
+        required
+      >
+
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button type="submit" id="loginButton">Login</button>
+      <p id="message" role="status" aria-live="polite"></p>
+    </form>
+
+    <p class="register-link">
+      Don't have an account?
+      <a href="js/register.html">Register here</a>
+    </p>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 My Blog Application</p>
+  </footer>
+
+  <script>
+    const API_URL = "http://localhost:5000/api";
+
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("message");
+    const button = document.getElementById("loginButton");
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      button.disabled = true;
+      message.style.color = "#252b48";
+      message.textContent = "Checking login details...";
+
+      try {
+        const response = await fetch(`${API_URL}/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.success === false) {
+          message.style.color = "red";
+          message.textContent =
+            data.message || "Login failed. Check your email and password.";
+          return;
+        }
+
+        if (data.user) {
+          localStorage.setItem("loggedInUser", JSON.stringify(data.user));
+        }
+
+        message.style.color = "green";
+        message.textContent = "Login successful! Opening dashboard...";
+
+        window.location.href = "dashboard.html";
+      } catch (error) {
+        console.error("Login error:", error);
+        message.style.color = "red";
+        message.textContent =
+          "Backend connection failed. Make sure the server is running on port 5000.";
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

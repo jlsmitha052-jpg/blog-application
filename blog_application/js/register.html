@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InkWell — Register</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header class="topbar">
+        <a class="brand" href="index.html">Ink<span>Well</span></a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+            <a class="active" href="register.html">Register</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a class="nav-button" href="create-blog.html">Write a blog +</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow">JOIN OUR COMMUNITY</p>
+            <h1>Create your account.</h1>
+            <p class="muted">Join InkWell and start sharing your ideas.</p>
+        </section>
+
+        <section class="auth-card">
+            <h2>Register</h2>
+            <p class="muted">Fill in your details to create an account.</p>
+
+            <form id="registerForm">
+                <label for="name">Full Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your full name"
+                    required
+                    minlength="2"
+                >
+
+                <label for="email">Email Address</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    required
+                    minlength="6"
+                >
+
+                <button type="submit" class="button">Create Account</button>
+
+                <p id="registerMessage" role="status" aria-live="polite"></p>
+            </form>
+
+            <p class="muted account-link">
+                Already have an account?
+                <a href="login.html">Login here</a>
+            </p>
+        </section>
+    </main>
+
+    <footer>Made for ideas that matter · InkWell</footer>
+
+    <script>
+        const API_URL = "http://localhost:5000/api";
+
+        const registerForm = document.getElementById("registerForm");
+        const registerMessage = document.getElementById("registerMessage");
+
+        registerForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+
+            registerMessage.textContent = "Creating your account...";
+            registerMessage.style.color = "#7457d9";
+
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || data.success === false) {
+                    throw new Error(
+                        data.message || "Registration failed. Please try again."
+                    );
+                }
+
+                registerMessage.textContent =
+                    data.message || "Registration successful! You can now log in.";
+                registerMessage.style.color = "green";
+
+                registerForm.reset();
+
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 1200);
+
+            } catch (error) {
+                console.error("Registration error:", error);
+
+                registerMessage.textContent =
+                    error.message === "Failed to fetch"
+                        ? "Cannot connect to the server. Please check whether the backend is running."
+                        : error.message;
+
+                registerMessage.style.color = "red";
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Blog | Blog Application</title>
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #222;
+        }
+
+        header {
+            background: #252b48;
+            padding: 18px 6%;
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav h2 {
+            margin: 0;
+        }
+
+        nav div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 0 18px;
+        }
+
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #252b48;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd0dc;
+            border-radius: 7px;
+            font: inherit;
+            background: white;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid #8995ff;
+            border-color: #5968e8;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            background: #4b59d8;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3543bd;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #blogMessage {
+            margin-top: 15px;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            nav {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <h2>Blog Application</h2>
+
+            <div>
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="create-blog.html">Create Blog</a>
+                <a href="login.html">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="form-container">
+            <h1>Create a New Blog</h1>
+            <p class="subtitle">Share your thoughts with the world.</p>
+
+            <form id="blogForm">
+                <label for="blogTitle">Blog Title *</label>
+                <input
+                    type="text"
+                    id="blogTitle"
+                    name="title"
+                    placeholder="Enter blog title"
+                    required
+                >
+
+                <label for="blogCategory">Category *</label>
+                <select id="blogCategory" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Education">Education</option>
+                    <option value="Lifestyle">Lifestyle</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Food">Food</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="blogExcerpt">Short Description</label>
+                <textarea
+                    id="blogExcerpt"
+                    name="excerpt"
+                    rows="3"
+                    placeholder="Write a short description"
+                ></textarea>
+
+                <label for="blogContent">Blog Content *</label>
+                <textarea
+                    id="blogContent"
+                    name="content"
+                    rows="8"
+                    placeholder="Write your blog content here..."
+                    required
+                ></textarea>
+
+                <button type="submit" id="publishButton">
+                    Publish Blog
+                </button>
+
+                <p id="blogMessage" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

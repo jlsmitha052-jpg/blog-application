@@ -1,0 +1,134 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <h1>My Blog</h1>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="create-blog.html">Create Blog</a>
+                <a href="login.html" id="loginLink">Login</a>
+                <button type="button" id="logoutBtn">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="dashboard-header">
+            <h2>Blog Dashboard</h2>
+            <p>Total Blogs: <strong id="totalBlogs">0</strong></p>
+            <a href="create-blog.html" class="btn">+ Create New Blog</a>
+        </section>
+
+        <p id="loadingMessage">Loading blogs...</p>
+        <p id="errorMessage" style="color: red;" hidden></p>
+        <p id="emptyMessage" hidden>No blogs found. Create your first blog!</p>
+
+        <section id="dashboardBlogs" class="blog-grid"></section>
+    </main>
+
+    <footer>
+        <p>© 2026 My Blog Application</p>
+    </footer>
+
+    <script>
+        const API_URL = "http://localhost:5000/api";
+
+        const totalBlogs = document.getElementById("totalBlogs");
+        const loadingMessage = document.getElementById("loadingMessage");
+        const errorMessage = document.getElementById("errorMessage");
+        const emptyMessage = document.getElementById("emptyMessage");
+        const dashboardBlogs = document.getElementById("dashboardBlogs");
+
+        async function loadBlogs() {
+            loadingMessage.hidden = false;
+            errorMessage.hidden = true;
+            emptyMessage.hidden = true;
+            dashboardBlogs.innerHTML = "";
+
+            try {
+                const response = await fetch(`${API_URL}/blogs`);
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || "Unable to load blogs.");
+                }
+
+                // Supports APIs returning an array directly
+                // or an object containing a blogs array.
+                const blogs = Array.isArray(result)
+                    ? result
+                    : (result.blogs || result.data || []);
+
+                if (!Array.isArray(blogs)) {
+                    throw new Error("Unexpected blog API response format.");
+                }
+
+                totalBlogs.textContent = blogs.length;
+
+                if (blogs.length === 0) {
+                    emptyMessage.hidden = false;
+                    return;
+                }
+
+                blogs.forEach(blog => {
+                    const card = document.createElement("article");
+                    card.className = "blog-card";
+
+                    const title = document.createElement("h3");
+                    title.textContent = blog.title || "Untitled Blog";
+
+                    const category = document.createElement("p");
+                    category.textContent = "Category: " + (blog.category || "General");
+
+                    const author = document.createElement("p");
+                    author.textContent = "Author: " + (blog.author || "Anonymous");
+
+                    const excerpt = document.createElement("p");
+                    excerpt.textContent = blog.excerpt ||
+                        (blog.content ? blog.content.substring(0, 120) : "");
+
+                    const viewButton = document.createElement("button");
+                    viewButton.type = "button";
+                    viewButton.textContent = "View";
+                    viewButton.addEventListener("click", () => {
+                        const content = blog.content || blog.excerpt || "No content available.";
+                        alert(`${blog.title || "Untitled Blog"}\n\n${content}`);
+                    });
+
+                    const editButton = document.createElement("button");
+                    editButton.type = "button";
+                    editButton.textContent = "Edit";
+                    editButton.addEventListener("click", () => editBlog(blog));
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.type = "button";
+                    deleteButton.textContent = "Delete";
+                    deleteButton.addEventListener("click", () => deleteBlog(blog));
+
+                    card.append(title, category, author, excerpt);
+                    card.append(viewButton, editButton, deleteButton);
+
+                    dashboardBlogs.appendChild(card);
+                });
+
+            } catch (error) {
+                errorMessage.textContent =
+                    "Failed to load blogs: " + error.message;
+                errorMessage.hidden = false;
+                console.error("Dashboard error:", error);
+            } finally {
+                loadingMessage.hidden = true;
+            }
+        }
+
+       
